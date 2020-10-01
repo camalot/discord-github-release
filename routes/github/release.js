@@ -19,13 +19,6 @@ function verifyPostData(req, res, next) {
     return next(new Error('Request body empty'));
   }
 
-
-  const pl = req.body;
-  console.log(payload);
-  if (pl.hook) {
-    return next();
-  }
-
   const sigHeader = "X-Hub-Signature";
   const sig = req.get(sigHeader) || ''
   const hmac = crypto.createHmac('sha1', config["github-release"].webhookSecret)

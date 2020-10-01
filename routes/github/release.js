@@ -18,7 +18,10 @@ function verifyPostData(req, res, next) {
   if (!payload) {
     return next(new Error('Request body empty'));
   }
+
+
   const pl = req.body;
+  console.log(payload);
   if (pl.hook) {
     return next();
   }

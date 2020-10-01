@@ -18,9 +18,9 @@ function verifyPostData(req, res, next) {
   if (!payload) {
     return next(new Error('Request body empty'));
   }
-
-  if (payload.hook) {
-    if (payload.hook.config.secret !== config["github-release"].webhookSecret) {
+  const pl = req.body;
+  if (pl.hook) {
+    if (pl.hook.config.secret !== config["github-release"].webhookSecret) {
       return next(new Error("Initialization webhook secret does not match the defined"));
     } else {
       return next();

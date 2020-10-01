@@ -1,0 +1,33 @@
+{
+  "name": "discord-github-release",
+  "description": "Publish github release information to a channel in discord.",
+  "keywords": [
+    "discord",
+    "github"
+  ],
+  "repository": "https://github.com/camalot/discord-github-release.git",
+  "website": "https://github.com/camalot/discord-github-release",
+  "env": {
+    "DISCORD_WEBHOOK_URLS": {
+      "description": "semicolon separated list of discord webhook urls",
+      "value": "",
+      "required": true
+    },
+    "RELEASE_COLOR": {
+      "description": "Published release color",
+      "value": "GREEN",
+      "required": false
+    },
+    "PRERELEASES_COLOR": {
+      "description": "Published Pre-release color",
+      "value": "ORANGE",
+      "required": false
+    }
+  },
+  "image": "heroku/nodejs",
+  "buildpacks": [
+    {
+      "url": "heroku/nodejs"
+    }
+  ]
+}

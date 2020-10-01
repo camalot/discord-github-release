@@ -20,11 +20,7 @@ function verifyPostData(req, res, next) {
   }
   const pl = req.body;
   if (pl.hook) {
-    if (pl.hook.config.secret !== config["github-release"].webhookSecret) {
-      return next(new Error("Initialization webhook secret does not match the defined"));
-    } else {
-      return next();
-    }
+    return next();
   }
 
   const sigHeader = "X-Hub-Signature";

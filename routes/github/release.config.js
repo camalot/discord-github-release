@@ -5,7 +5,8 @@ const merge = require('merge');
 
 let config = {
   "github-release": {
-    route: ['/github/release']
+    route: ['/github/release'],
+    webhookSecret: process.env.GITHUB_WEBHOOK_SECRET
   }
 
 };

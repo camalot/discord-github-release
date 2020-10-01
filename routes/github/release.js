@@ -5,6 +5,7 @@ const config = require('./release.config.js')
 const debug = require('debug')('discord-github-release:release');
 const router = express.Router();
 const request = require("axios");
+const crypto = require('crypto');
 
 // https://discord.com/developers/docs/resources/webhook#execute-webhook-jsonform-params
 
@@ -12,7 +13,23 @@ router.get("/", (req, resp, next) => {
   return resp.json(req.body);
 })
 
-router.post("/", (req, resp, next) => {
+function verifyPostData(req, res, next) {
+  const payload = JSON.stringify(req.body)
+  if (!payload) {
+    return next('Request body empty')
+  }
+  const sigHeader = "X-Hub-Signature";
+  const sig = req.get(sigHeader) || ''
+  const hmac = crypto.createHmac('sha1', config["github-release"].webhookSecret)
+  const digest = Buffer.from('sha1=' + hmac.update(payload).digest('hex'), 'utf8')
+  const checksum = Buffer.from(sig, 'utf8')
+  if (checksum.length !== digest.length || !crypto.timingSafeEqual(digest, checksum)) {
+    return next(new Error(`Request body digest (${digest}) did not match ${sigHeader} (${checksum})`))
+  }
+  return next()
+}
+
+router.post("/", verifyPostData, (req, resp, next) => {
   if (!req.body) {
     console.log('POST Request received, but no body!');
     return _respond(resp, "skipping release that is not published");

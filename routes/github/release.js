@@ -42,7 +42,7 @@ router.post("/", verifyPostData, (req, resp, next) => {
     return _respond(resp, "Successfully Registered Hook");
   }
 
-  if (payload.release.draft || (payload.action !== "released" && payload.action !== "published" && payload.action !== "created")) {
+  if (payload.release.draft || payload.action !== "published") {
     console.log("skipping release that is not published");
     return _respond(resp, "skipping release that is not published");
   }
@@ -106,7 +106,7 @@ function _createEmbed(payload) {
   },
   {
     name: "**URL**",
-    value: `<${payload.release.url}>`,
+    value: `<${payload.release.html_url}>`,
     inline: false
   }];
   let assets = payload.release.assets;

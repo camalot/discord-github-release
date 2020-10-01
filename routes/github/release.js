@@ -16,8 +16,17 @@ router.get("/", (req, resp, next) => {
 function verifyPostData(req, res, next) {
   const payload = JSON.stringify(req.body)
   if (!payload) {
-    return next('Request body empty')
+    return next(new Error('Request body empty'));
   }
+
+  if (payload.hook) {
+    if (payload.hook.config.secret !== config["github-release"].webhookSecret) {
+      return next(new Error("Initialization webhook secret does not match the defined"));
+    } else {
+      return next();
+    }
+  }
+
   const sigHeader = "X-Hub-Signature";
   const sig = req.get(sigHeader) || ''
   const hmac = crypto.createHmac('sha1', config["github-release"].webhookSecret)

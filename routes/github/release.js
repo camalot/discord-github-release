@@ -49,7 +49,7 @@ router.post("/", verifyPostData, (req, resp, next) => {
     return _respond(resp, "Successfully Registered Hook");
   }
 
-  if (payload.release.draft || payload.action !== "released") {
+  if (payload.release.draft || (payload.action !== "released" && payload.action !== "published" && payload.action !== "created")) {
     console.log("skipping release that is not published");
     return _respond(resp, "skipping release that is not published");
   }

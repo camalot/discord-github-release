@@ -6,6 +6,7 @@ const debug = require('debug')('discord-github-release:release');
 const router = express.Router();
 const request = require("axios");
 const crypto = require('crypto');
+const async = require("async");
 
 // https://discord.com/developers/docs/resources/webhook#execute-webhook-jsonform-params
 
@@ -48,21 +49,25 @@ router.post("/", verifyPostData, (req, resp, next) => {
   }
 
   let dpayload = _createDiscordWebhookPayload(payload);
-  console.log(JSON.stringify(dpayload));
-
-  request.post("https://discordapp.com/api/webhooks/761231901859119155/lxNAxwJoBK2d6dsr9hQXN0RpJcmSrF2361F46AX7yW0uhAs_BZDvfL01uYO4DgtPkuX6", dpayload, {
-    headers: {
-      'Content-Type': 'application/json'
-    }
-  })
-    .then((response) => {
-      return _respond(resp, "Notify Discord of Release");
+  async.each(config.discord.webhooks, (hook, nextItem) => {
+    request.post(hook, dpayload, {
+      headers: {
+        'Content-Type': 'application/json'
+      }
     })
-    .catch((err) => {
+      .then((response) => {
+        return nextItem();
+      })
+      .catch((err) => {
+        return nextItem(err);
+      });
+  }, (err) => {
+    if (err) {
       console.error(err);
       return next(err);
-    });
-
+    }
+    return _respond(resp, "Notify Discord of Release");
+  })
 });
 
 

@@ -1,6 +1,6 @@
 "use strict";
 
-let DISCORD_COLORS = {
+const DISCORD_COLORS = {
   DEFAULT: 0,
   AQUA: 1752220,
   GREEN: 3066993,

@@ -67,7 +67,7 @@ router.post("/", verifyPostData, (req, resp, next) => {
       return next(err);
     }
     return _respond(resp, "Notify Discord of Release");
-  })
+  });
 });
 
 
